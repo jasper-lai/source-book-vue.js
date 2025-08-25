@@ -21,7 +21,7 @@
     // Vue 3.0 with Composition API Style
     const { createApp, ref } = Vue;
 
-    const vm = createApp({
+    const app = createApp({
       setup() {
         const message = ref('Hello Vue 3.0!');
         return {
@@ -31,7 +31,7 @@
     });
 
     // mount
-    vm.mount('#app');
+    app.mount('#app');
   </script>
 
 </body>
