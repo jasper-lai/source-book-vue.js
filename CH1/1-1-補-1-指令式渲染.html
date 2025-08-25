@@ -1,0 +1,31 @@
+<!-- 參考連結: https://chatgpt.com/share/68abd1d1-ad50-800b-9c00-d06fe7f40f18 -->
+ 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>指令式渲染</title>
+  </head>
+  <body>
+    <h1 id="message"></h1>
+    <input name="user" type="text" value="Jasper" />
+
+    <script>
+      // 1) 取得輸入框（用屬性選擇器 [input[name=user]）      
+      const input = document.querySelector("input[name=user]");
+
+      // 2) 取得要顯示文字的 h1
+      //const h1 = document.getElementById('message');
+      const h1 = document.querySelector("#message");
+
+      // 3) 監聽 input 事件（每次打字都會觸發）
+      input.addEventListener("input", (e) => {
+        h1.textContent = `Hello, ${e.target.value}`;
+      });
+
+      // 4) 頁面載入時，先把預設值同步到 h1 
+      h1.textContent = `Hello, ${input.value}`; // Hello, Jasper
+    </script>
+  </body>
+</html>

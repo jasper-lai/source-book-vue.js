@@ -1,0 +1,135 @@
+<!-- 參考連結: https://chatgpt.com/share/68abd1d1-ad50-800b-9c00-d06fe7f40f18 -->
+
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<title>input / beforeinput / composition 範例</title>
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    line-height: 1.5;
+    padding: 16px;
+  }
+  pre {
+    border: 1px solid #ccc;
+    padding: 8px;
+    height: 140px;
+    overflow: auto;
+    background: #f9f9f9;
+  }
+  .row {
+    margin-bottom: 16px;
+  }
+</style>
+
+<h3>1) IME 安全的即時預覽</h3>
+<div class="row">
+  <input id="imeInput" type="text" placeholder="試試中文輸入法（注音/拼音）" />
+  <div>預覽：<span id="imePreview"></span></div>
+</div>
+
+<h3>2) 只允許數字（beforeinput 可擋 paste/IME）</h3>
+<div class="row">
+  <input
+    id="digitsInput"
+    type="text"
+    inputmode="numeric"
+    placeholder="只能輸入 0-9"
+  />
+  <div>值：<span id="digitsValue"></span></div>
+</div>
+
+<h4>事件紀錄</h4>
+<pre id="log"></pre>
+
+<script>
+  const logEl = document.getElementById("log");
+  const log = (msg) => {
+    logEl.textContent += msg + "\n";
+    logEl.scrollTop = logEl.scrollHeight;
+  };
+
+  /* ========== 1) IME 安全的即時預覽 ========== */
+  const ime = document.getElementById("imeInput");
+  const imePreview = document.getElementById("imePreview");
+
+  // 使用 input 事件更新，但組字中（isComposing=true）先不處理
+  ime.addEventListener("input", (e) => {
+    if (e.isComposing) {
+      log(`[input:composing] value="${ime.value}"`);
+      return;
+    }
+    imePreview.textContent = ime.value;
+    log(`[input] value="${ime.value}"`);
+  });
+
+  // 組字過程（中文輸入法）三兄弟
+  ime.addEventListener("compositionstart", () => log("compositionstart"));
+  ime.addEventListener("compositionupdate", (e) =>
+    log(`compositionupdate data=${JSON.stringify(e.data)}`)
+  );
+  ime.addEventListener("compositionend", (e) => {
+    log(`compositionend data=${JSON.stringify(e.data)}`);
+    // 組字結束再同步預覽（此時 value 已定稿）
+    imePreview.textContent = ime.value;
+  });
+
+  /* ========== 2) 只允許數字：beforeinput 攔截 ========== */
+  const digits = document.getElementById("digitsInput");
+  const digitsValue = document.getElementById("digitsValue");
+  const isDigits = (s) => /^\d*$/.test(s);
+
+  // 透過 beforeinput 模擬「套用後的結果」，若不合規則就 preventDefault()
+  digits.addEventListener("beforeinput", (e) => {
+    const t = e.target;
+    const start = t.selectionStart ?? t.value.length;
+    const end = t.selectionEnd ?? t.value.length;
+
+    let next;
+    if (e.inputType && e.inputType.startsWith("delete")) {
+      // 刪除類：計算刪除後的字串
+      if (start !== end) {
+        next = t.value.slice(0, start) + t.value.slice(end);
+      } else if (e.inputType === "deleteContentBackward" && start > 0) {
+        next = t.value.slice(0, start - 1) + t.value.slice(end);
+      } else if (
+        e.inputType === "deleteContentForward" &&
+        end < t.value.length
+      ) {
+        next = t.value.slice(0, start) + t.value.slice(end + 1);
+      } else {
+        next = t.value;
+      }
+    } else {
+      // 插入類（含 insertText / insertFromPaste / insertCompositionText）
+      const data = e.data ?? "";
+      next = t.value.slice(0, start) + data + t.value.slice(end);
+    }
+
+    log(
+      `beforeinput type=${e.inputType} data=${JSON.stringify(
+        e.data
+      )} composing=${e.isComposing} -> next=${JSON.stringify(next)}`
+    );
+
+    if (!isDigits(next)) {
+      e.preventDefault(); // ✋ 直接阻止這次輸入（貼上/組字提交/單字輸入都有效）
+      log("  ✋ blocked（僅允許 0-9）");
+    }
+  });
+
+  // 成功輸入後才更新顯示；這裡不需要特別處理 composing
+  digits.addEventListener("input", () => {
+    digitsValue.textContent = digits.value;
+  });
+
+  // 保險：若瀏覽器不支援 beforeinput，就在 input 事後清理
+  if (!("onbeforeinput" in document.createElement("input"))) {
+    digits.addEventListener("input", () => {
+      const cleaned = digits.value.replace(/\D+/g, "");
+      if (cleaned !== digits.value) {
+        digits.value = cleaned;
+      }
+      digitsValue.textContent = digits.value;
+    });
+  }
+</script>
