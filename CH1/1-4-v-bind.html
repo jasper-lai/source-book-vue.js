@@ -19,10 +19,11 @@
     <p v-bind:id="customId"> 打開 devtools 觀察生成的 DOM </p>
   </div>
 
-  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
   <script>
-    const vm = Vue.createApp({
+    const { createApp } = Vue;
+    const app = createApp({
       data() {
         return {
           customId: 'item-id-1'

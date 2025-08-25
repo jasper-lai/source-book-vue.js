@@ -15,11 +15,12 @@
   </div>
 
 
-  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   
   <script>
     // Vue 3.0 with options-base style
-    const vm = Vue.createApp({
+    const { createApp } = Vue;
+    const vm = createApp({
       data() {
         return {
           message: 'Hello Vue 3.0!'

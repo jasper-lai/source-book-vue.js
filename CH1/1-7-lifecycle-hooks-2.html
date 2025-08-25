@@ -80,10 +80,11 @@
   </div>
 
 
-  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
   <script>
-    const vm = Vue.createApp({
+    const { createApp } = Vue;
+    const app = createApp({
       data() {
         return {
           msg: [],

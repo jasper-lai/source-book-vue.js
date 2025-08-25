@@ -40,11 +40,12 @@
     <p>Checked names: {{ checkedNames }}</p>
   </div>
 
-  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
   <script>
     // 因為是複選的關係，這裡的 checkedNames 是陣列
-    const vm = Vue.createApp({
+    const { createApp } = Vue;
+    const app = createApp({
       data() {
         return {
           checkedNames: []

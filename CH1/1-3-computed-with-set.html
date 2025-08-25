@@ -21,10 +21,11 @@
     <div>日幣 <input type="text" v-model="jpy"></div>
   </div>
 
-  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
   <script>
-    const vm = Vue.createApp({
+    const { createApp } = Vue;
+    const app = createApp({
       data() {
         return {
           twd: 0.278

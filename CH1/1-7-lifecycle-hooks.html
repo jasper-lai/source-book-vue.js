@@ -20,11 +20,12 @@
     <p>請開啟 devtool 觀察 console 主控台</p>
   </div>
 
-  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
   <script>
     // for Vue 3.x
-    const vm = Vue.createApp({
+    const { createApp } = Vue;
+    const app = createApp({
       data() {
         return {
           msg: 'Hello Vue.js!'

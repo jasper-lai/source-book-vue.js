@@ -32,10 +32,11 @@
   </div>
 
 
-  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
   <script>
-    const vm = Vue.createApp({
+    const { createApp } = Vue;
+    const app = createApp({
       data() {
         return {
           numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

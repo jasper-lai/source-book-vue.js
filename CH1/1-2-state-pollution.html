@@ -25,20 +25,22 @@
     VM2: <input type="text" v-model="name">
   </div>
 
-  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
   <script>
     const dataObj = {
       name: '08JS'
     };
 
-    const vm1 = Vue.createApp({
+    const { createApp } = Vue;
+    const app = createApp({
       data() {
         return dataObj
       },
     }).mount('#app');
 
-    const vm2 = Vue.createApp({
+    const { createApp } = Vue;
+    const app = createApp({
       data() {
         return dataObj
       },

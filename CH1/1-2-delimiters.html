@@ -15,11 +15,12 @@
     %{ message }%
   </div>
 
-  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   
   <script>
     // vue 3.x
-    const app = Vue.createApp({
+    const { createApp } = Vue;
+    const app = createApp({
       delimiters: ['%{', '}%'],
       data() {
         return {
