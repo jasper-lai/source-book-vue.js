@@ -1,39 +1,90 @@
+<!--
+* HTML 結構：說明了 Vue 應用的掛載點和模板語法
+* Composition API：解釋了 setup() 函數的作用和用法
+* 響應式資料：說明了 ref() 函數如何建立響應式資料
+* 應用程式生命週期：從建立到掛載的完整流程
+* 模板語法：解釋了雙大括號 {{ }} 的用途
+-->
+
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello Vue</title>
+    <!-- 引入 normalize.css 來重置瀏覽器預設樣式 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello Vue</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
-</head>
+  <body>
+    <!-- 頁面說明文字 -->
+    <p></p>
+    <p>請輸入文字, 會在下方同步呈現:</p>
+    <p></p>
 
-<body>
+    <!-- Vue 應用程式的掛載點，id="app" 用於指定 Vue 實例要控制的 DOM 元素 -->
+    <div id="app">
+      <!-- v-model 實現雙向綁定，輸入框的值與 message 資料同步 -->
+      <input v-model="message" type="text" placeholder="請輸入訊息" />
+      <!-- 使用 Vue 的模板語法 {{ }} 來顯示響應式資料 -->
+      <p>{{ message }}</p>
 
-  <div id="app">
-    {{ message }}
-  </div>
+      <!-- 新增按鈕來手動觸發修改 -->
+      <button @click="changeMessage">立即修改為 Hello, World</button>
+      <button @click="delayChangeMessage">5秒後修改為 Hello, jasper</button>
+    </div>
 
+    <!-- 從 CDN 引入 Vue 3.0 的全域版本 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  
-  <script>
-    // Vue 3.0 with Composition API Style
-    const { createApp, ref } = Vue;
+    <script>
+      // Vue 3.0 使用 Composition API 風格
+      // 從 Vue 全域物件中解構出 createApp、ref 和 onMounted 函數
+      const { createApp, ref, onMounted } = Vue;
 
-    const app = createApp({
-      setup() {
-        const message = ref('Hello Vue 3.0!');
-        return {
-          message
-        }
-      }
-    });
+      // 建立 Vue 應用程式實例
+      const app = createApp({
+        // setup() 是 Composition API 的核心函數，用於定義組件的邏輯
+        setup() {
+          // 使用 ref() 建立響應式資料
+          // ref 會將原始值包裝成響應式物件，當值改變時會自動更新 UI
+          const message = ref("Hello Vue 3.0!");
 
-    // mount
-    app.mount('#app');
-  </script>
+          // 定義方法：立即修改訊息
+          const changeMessage = () => {
+            message.value = "Hello, World";
+          };
 
-</body>
+          // 定義方法：延遲修改訊息
+          const delayChangeMessage = () => {
+            setTimeout(() => {
+              message.value = "Hello, jasper";
+            }, 5000);
+          };
 
+          // onMounted 是 Composition API 中的生命週期鉤子
+          // 等同於 Options API 中的 mounted()
+          onMounted(() => {
+            // 5 秒後自動修改訊息
+            delayChangeMessage();
+          });
+
+          // setup() 函數必須返回一個物件
+          // 返回的屬性和方法會暴露給模板使用
+          return {
+            message,
+            changeMessage,
+            delayChangeMessage,
+          };
+        },
+      });
+
+      // 將 Vue 應用程式掛載到 id="app" 的 DOM 元素上
+      // 掛載後 Vue 開始控制該元素及其子元素
+      app.mount("#app");
+    </script>
+  </body>
 </html>
