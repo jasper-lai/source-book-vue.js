@@ -76,8 +76,13 @@
         //},
       });
 
+      // 在 DOM Ready 的狀況下, 
       // 將 Vue 應用程式掛載到 id 為 'app' 的 DOM 元素上
-      app.mount("#app");
+      // 掛載後 Vue 開始控制該元素及其子元素
+      document.addEventListener("DOMContentLoaded", () => {
+        app.mount("#app");
+      });
+
     </script>
   </body>
 </html>
