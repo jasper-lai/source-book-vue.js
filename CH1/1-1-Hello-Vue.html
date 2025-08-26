@@ -5,30 +5,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hello Vue</title>
+  <!-- 載入 CSS 重置樣式，統一不同瀏覽器的預設樣式 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
 </head>
 
 <body>
 
+  <!-- 頁面說明文字 -->
+  <p></p>
+  <p>請輸入文字, 會在下方同步呈現:</p>
+  <p></p>
+
+  <!-- Vue 應用程式的掛載點 -->
   <div id="app">
-    {{ message }}
+    <!-- v-model 實現雙向綁定，輸入框的值與 message 資料同步 -->
+    <input v-model="message" type="text" placeholder="請輸入訊息">
+    <!-- 使用插值語法 {{ }} 顯示 message 的值 -->
+    <p>{{ message }}</p>
   </div>
 
-
+  <!-- 載入 Vue 3.0 框架 -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   
   <script>
-    // Vue 3.0 with options-base style
+    // Vue 3.0 使用 Options API 風格
+    // 從 Vue 物件中解構出 createApp 方法
     const { createApp } = Vue;
+    
+    // 建立 Vue 應用程式實例
     const app = createApp({
+      // data 函數定義元件的響應式資料
       data() {
         return {
+          // message 屬性用於存儲使用者輸入的訊息
           message: 'Hello Vue 3.0!'
         }
       }
     });
 
-    // mount
+    // 將 Vue 應用程式掛載到 id 為 'app' 的 DOM 元素上
     app.mount('#app');
   </script>
 
